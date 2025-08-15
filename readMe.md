@@ -174,9 +174,3 @@ Adding your own traffic scenario is a straightforward process:
 * **JSON logs** are emitted to `stdout`, which is ideal for log collectors like ELK, Loki, or CloudWatch.
 * The `httpx` client uses **exponential backoff** for transient failures.
 * Remember: `localhost` inside a container is not the same as your host machine. Use `host.docker.internal` or a Kubernetes Service DNS name.
-
----
-
-## License
-
-MIT
