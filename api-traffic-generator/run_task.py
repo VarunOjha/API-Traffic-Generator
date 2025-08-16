@@ -10,6 +10,9 @@ from .scenarios.seed_room_categories import run_once as seed_room_categories_onc
 from .scenarios.get_room_categories import run_once as get_room_categories_once
 from .scenarios.seed_motel_rooms import run_once as seed_motel_rooms_once 
 from .scenarios.get_motel_rooms import run_once as get_motel_rooms_once
+from .scenarios.reservation_ping import run_once as reservation_ping_once
+from .scenarios.reservation_all_motels import run_once as reservation_all_motels_once  # NEW
+
 
 TASKS = {
     "post_motel_chain": post_chain_once,
@@ -20,6 +23,8 @@ TASKS = {
     "seed_motel_rooms": seed_motel_rooms_once,
     "get_room_categories": get_room_categories_once,
     "get_motel_rooms": get_motel_rooms_once,
+    "reservation_ping_once": reservation_ping_once,
+    "reservation_all_motels": reservation_all_motels_once,
 }
 
 def main():
