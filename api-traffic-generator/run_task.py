@@ -4,11 +4,22 @@ from .config import get_settings
 from .scenarios.post_motel_chain import run_once as post_chain_once
 
 from .scenarios.ping import run_once as ping_once
-
+from .scenarios.get_motel_chains import run_once as get_motel_chains_once
+from .scenarios.get_motels import run_once as get_motels_once
+from .scenarios.seed_room_categories import run_once as seed_room_categories_once
+from .scenarios.get_room_categories import run_once as get_room_categories_once
+from .scenarios.seed_motel_rooms import run_once as seed_motel_rooms_once 
+from .scenarios.get_motel_rooms import run_once as get_motel_rooms_once
 
 TASKS = {
     "post_motel_chain": post_chain_once,
-    "ping_once": ping_once, 
+    "ping_once": ping_once,
+    "get_motel_chains": get_motel_chains_once,
+    "get_motels": get_motels_once,
+    "seed_room_categories": seed_room_categories_once,
+    "seed_motel_rooms": seed_motel_rooms_once,
+    "get_room_categories": get_room_categories_once,
+    "get_motel_rooms": get_motel_rooms_once,
 }
 
 def main():
