@@ -39,14 +39,7 @@ API-Traffic-Generator/
       price_to_reservation.py # GET priceList -> POST reservation
   docker/
     Dockerfile
-  k8s/
-    namespace.yaml
-    configmap.yaml
-    secret-sample.yaml
-    cronjob-ping.yaml
-    cronjob-post-motel-chain.yaml
-    cronjob-get-all-motels.yaml
-    cronjob-reservation.yaml
+  infrastructre/
 ```
 
 ### Key Ideas
