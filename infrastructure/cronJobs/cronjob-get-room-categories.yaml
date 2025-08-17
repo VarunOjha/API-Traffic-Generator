@@ -1,0 +1,34 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: get-room-categories
+  namespace: api-traffic
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: trafficgen
+              image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: TASK
+                  value: "get_room_categories"
+                - name: BASE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: trafficgen-config-motel
+                      key: BASE_URL
+                - name: API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: trafficgen-secret
+                      key: API_TOKEN
+              resources:
+                requests: { cpu: "50m", memory: "64Mi" }
+                limits:   { cpu: "250m", memory: "256Mi" }

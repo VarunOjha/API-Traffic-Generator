@@ -1,0 +1,53 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reservation-from-availability
+  namespace: api-traffic
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: trafficgen
+              image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: TASK
+                  value: "reservation_from_availability"
+                - name: BASE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: trafficgen-config-reservation
+                      key: BASE_URL
+                - name: START_PAGE
+                  value: "1"
+                - name: RESV_PER_PAGE
+                  value: "50"
+                - name: RESV_PAGE_PARAM
+                  value: "page"
+                - name: RESV_PER_PAGE_PARAM
+                  value: "per_page"
+                - name: RESERVATION_NAME
+                  value: "John Doe"
+                - name: RESERVATION_EMAIL
+                  value: "john.doe@example.com"
+                - name: RESERVATION_STATUS
+                  value: "Confirmed"
+                # Optional filters:
+                # - name: RESV_ROOM_TYPE
+                #   value: "Deluxe Suite"
+                # - name: RESV_DATE
+                #   value: "2025-08-16"
+                - name: API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: trafficgen-secret
+                      key: API_TOKEN
+              resources:
+                requests: { cpu: "50m", memory: "64Mi" }
+                limits:   { cpu: "250m", memory: "256Mi" }

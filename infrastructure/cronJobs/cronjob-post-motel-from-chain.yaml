@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: post-motel-from-chain
+  namespace: api-traffic
+spec:
+  schedule: "* * * * *"  # every minute
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: trafficgen
+              image: ${IMAGE}
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: TASK
+                  value: "post_motel_from_chain"
+                - name: BASE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: trafficgen-config-motel
+                      key: BASE_URL
+                - name: PAGE_SIZE
+                  value: "50"
+                - name: CHAIN_FILTER_STATUS
+                  value: "Active"
+                - name: MOTEL_NAME_SUFFIX
+                  value: "Motel1"
+                - name: MOTEL_STATUS
+                  value: "Active"
+                - name: API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: trafficgen-secret
+                      key: API_TOKEN
+              resources:
+                requests: { cpu: "50m", memory: "64Mi" }
+                limits:   { cpu: "250m", memory: "256Mi" }

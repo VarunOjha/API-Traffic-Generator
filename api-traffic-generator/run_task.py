@@ -15,6 +15,8 @@ from .scenarios.reservation_all_motels import run_once as reservation_all_motels
 from .scenarios.reservation_from_availability import run_once as reservation_from_availability_once
 from .scenarios.reservation_all_bookings import run_once as reservation_all_bookings_once
 from .scenarios.reservation_by_ids import run_once as reservation_by_ids_once 
+from .scenarios.post_motel_from_chain import run_once as post_motel_from_chain_once  # NEW
+
 
 
 
@@ -33,6 +35,7 @@ TASKS = {
     "reservation_from_availability": reservation_from_availability_once,
     "reservation_all_bookings": reservation_all_bookings_once,
     "reservation_by_ids": reservation_by_ids_once,
+    "post_motel_from_chain": post_motel_from_chain_once,
 }
 
 def main():
