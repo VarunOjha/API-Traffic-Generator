@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: trafficgen-config-reservation
+  namespace: api-traffic
+data:
+  BASE_URL: "http://ac2b362cae77f45db8edadc997f182a6-2041533653.us-west-2.elb.amazonaws.com"

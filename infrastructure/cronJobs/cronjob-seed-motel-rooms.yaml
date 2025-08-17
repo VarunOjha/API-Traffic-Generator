@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: seed-motel-rooms
+  namespace: api-traffic
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: trafficgen
+              image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: TASK
+                  value: "seed_motel_rooms"
+                - name: BASE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: trafficgen-config-motel
+                      key: BASE_URL
+                - name: FLOOR_START
+                  value: "0"
+                - name: FLOOR_END
+                  value: "3"
+                - name: ROOMS_PER_FLOOR
+                  value: "5"
+                - name: ROOM_STATUS
+                  value: "Active"
+                - name: API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: trafficgen-secret
+                      key: API_TOKEN
+              resources:
+                requests: { cpu: "50m", memory: "64Mi" }
+                limits:   { cpu: "250m", memory: "256Mi" }

@@ -1,0 +1,29 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: api-traffic-generator
+  region: ${AWS_REGION}   # replace or envsubst at apply time
+  version: "1.29"
+
+iam:
+  withOIDC: true
+
+vpc:
+  # let eksctl create a simple VPC
+  nat:
+    gateway: Single
+
+managedNodeGroups:
+  - name: ng-t3-small
+    instanceType: t3.small
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 2
+    volumeSize: 20
+    labels:
+      workload: trafficgen
+    tags:
+      Name: api-traffic-generator-ng
+    ssh:
+      enableSsm: true

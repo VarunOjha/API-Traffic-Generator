@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: reservation-by-ids
+  namespace: api-traffic
+spec:
+  schedule: "* * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: trafficgen
+              image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: TASK
+                  value: "reservation_by_ids"
+                - name: BASE_URL
+                  valueFrom:
+                    configMapKeyRef:
+                      name: trafficgen-config-reservation
+                      key: BASE_URL
+                - name: START_PAGE
+                  value: "1"
+                - name: BOOKINGS_PER_PAGE
+                  value: "50"
+                - name: BOOKINGS_PAGE_PARAM
+                  value: "page"
+                - name: BOOKINGS_PER_PAGE_PARAM
+                  value: "per_page"
+                - name: API_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: trafficgen-secret
+                      key: API_TOKEN
+              resources:
+                requests: { cpu: "50m", memory: "64Mi" }
+                limits:   { cpu: "250m", memory: "256Mi" }
