@@ -84,12 +84,69 @@ def _fetch_motels_page(page: int, size: int) -> Dict[str, Any]:
 @retry_policy()
 def _post_room_category(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
     with client() as c:
-        r = c.post(path, json=payload)
-        r.raise_for_status()
+        full_url = f"{c.base_url}{path}"
+        # Log the request payload and headers
+        log.info(json.dumps({
+            "event": "room_category_request",
+            "url": full_url,
+            "method": "POST",
+            "headers": dict(c.headers),
+            "payload": payload,
+            "payload_raw_json": json.dumps(payload, separators=(',', ':'))
+        }))
+        
         try:
-            return r.json()
-        except Exception:
-            return {"status_code": r.status_code}
+            r = c.post(path, json=payload)
+            
+            # Log response details for successful requests too
+            log.info(json.dumps({
+                "event": "room_category_response",
+                "url": full_url,
+                "status_code": r.status_code,
+                "response_headers": dict(r.headers),
+                "response_size": len(r.content) if r.content else 0
+            }))
+            
+            r.raise_for_status()
+            try:
+                return r.json()
+            except Exception:
+                return {"status_code": r.status_code}
+        except Exception as e:
+            # Log detailed failure response
+            error_data = {
+                "event": "room_category_request_failed",
+                "url": full_url,
+                "error": str(e),
+                "error_type": type(e).__name__,
+                "payload": payload,
+                "payload_raw_json": json.dumps(payload, separators=(',', ':')),
+                "request_headers": dict(c.headers)
+            }
+            
+            # Add response details if available
+            if hasattr(e, 'response') and e.response is not None:
+                error_data.update({
+                    "status_code": e.response.status_code,
+                    "response_headers": dict(e.response.headers),
+                })
+                try:
+                    error_data["response_body"] = e.response.json()
+                except:
+                    try:
+                        error_data["response_text"] = e.response.text
+                    except:
+                        error_data["response_text"] = "Could not read response body"
+                        
+                # Log raw response content for debugging
+                try:
+                    error_data["response_content_length"] = len(e.response.content) if e.response.content else 0
+                    error_data["response_encoding"] = e.response.encoding
+                except:
+                    pass
+            
+            log.error(json.dumps(error_data))
+            raise
 
 # ---------- main entry ----------
 def run_once():
@@ -129,7 +186,6 @@ def run_once():
             # Create each category for this motel
             for cdef in cats:
                 payload = {
-                    "motelRoomCategoryId": str(uuid4()),
                     "motelChainId": chain_id,
                     "motelId": motel_id,
                     "displayName": cdef.get("displayName"),
@@ -146,7 +202,6 @@ def run_once():
                         "motelId": motel_id,
                         "motelChainId": chain_id,
                         "roomCategoryName": payload["roomCategoryName"],
-                        "motelRoomCategoryId": payload["motelRoomCategoryId"],
                         "api_path": path,
                         "resp": resp if isinstance(resp, dict) else None
                     }))
@@ -156,7 +211,11 @@ def run_once():
                         "motelId": motel_id,
                         "motelChainId": chain_id,
                         "roomCategoryName": payload["roomCategoryName"],
-                        "error": str(e)
+                        "payload": payload,
+                        "payload_raw_json": json.dumps(payload, separators=(',', ':')),
+                        "api_path": path,
+                        "error": str(e),
+                        "error_type": type(e).__name__
                     }))
 
         pg = _pagination(body)

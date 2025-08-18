@@ -4,7 +4,7 @@ metadata:
   name: get-motel-rooms
   namespace: api-traffic
 spec:
-  schedule: "* * * * *"
+  schedule: "*/5 * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -26,11 +26,6 @@ spec:
                       key: BASE_URL
                 - name: PAGE_SIZE
                   value: "50"
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }

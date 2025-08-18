@@ -43,11 +43,6 @@ spec:
                 #   value: "Deluxe Suite"
                 # - name: RESV_DATE
                 #   value: "2025-08-16"
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }

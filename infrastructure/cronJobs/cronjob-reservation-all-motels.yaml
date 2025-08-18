@@ -32,11 +32,6 @@ spec:
                   value: "page"
                 - name: RESV_PER_PAGE_PARAM
                   value: "per_page"
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }

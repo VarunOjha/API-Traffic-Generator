@@ -14,7 +14,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: trafficgen
-              image: ${IMAGE}
+              image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
               imagePullPolicy: IfNotPresent
               env:
                 - name: TASK
@@ -32,11 +32,6 @@ spec:
                   value: "Motel1"
                 - name: MOTEL_STATUS
                   value: "Active"
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }

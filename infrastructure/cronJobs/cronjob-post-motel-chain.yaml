@@ -24,11 +24,6 @@ spec:
                     configMapKeyRef:
                       name: trafficgen-config-motel
                       key: BASE_URL
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }
