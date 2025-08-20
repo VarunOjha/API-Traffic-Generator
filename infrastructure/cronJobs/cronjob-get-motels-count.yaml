@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: reservation-ping-once
+  name: get-motels-count
   namespace: api-traffic
 spec:
   schedule: "* * * * *"
@@ -18,11 +18,11 @@ spec:
               imagePullPolicy: Always
               env:
                 - name: TASK
-                  value: "reservation_ping_once"
+                  value: "get_motels_count"
                 - name: BASE_URL
                   valueFrom:
                     configMapKeyRef:
-                      name: trafficgen-config-reservation
+                      name: trafficgen-config-motel
                       key: BASE_URL
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }

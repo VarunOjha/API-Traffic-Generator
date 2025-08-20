@@ -16,7 +16,7 @@ spec:
           containers:
             - name: trafficgen
               image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               env:
                 - name: TASK
                   value: "ping_once"
@@ -25,11 +25,6 @@ spec:
                     configMapKeyRef:
                       name: trafficgen-config-motel
                       key: BASE_URL
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }

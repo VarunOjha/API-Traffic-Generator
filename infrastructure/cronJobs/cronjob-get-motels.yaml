@@ -15,7 +15,7 @@ spec:
           containers:
             - name: trafficgen
               image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               env:
                 - name: TASK
                   value: "get_motels"
@@ -28,11 +28,6 @@ spec:
                   value: "50"
                 - name: CHAIN_LOOKUP
                   value: "true"
-                - name: API_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trafficgen-secret
-                      key: API_TOKEN
               resources:
                 requests: { cpu: "50m", memory: "64Mi" }
                 limits:   { cpu: "250m", memory: "256Mi" }

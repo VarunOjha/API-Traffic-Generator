@@ -9,9 +9,9 @@ set -uo pipefail
 # -----------------------------
 DOCKER_IMAGE="${DOCKER_IMAGE:-api-traffic-generator:latest}"
 
-BASE_URL_DEFAULT="${BASE_URL:-http://host.docker.internal:8085}"
+BASE_URL_DEFAULT="${BASE_URL:-http://ac2b362cae77f45db8edadc997f182a6-2041533653.us-west-2.elb.amazonaws.com}"
 BASE_URL_MOTEL="${BASE_URL_MOTEL:-$BASE_URL_DEFAULT}"
-BASE_URL_RESV="${BASE_URL_RESV:-${BASE_URL2:-http://host.docker.internal:8086}}"
+BASE_URL_RESV="${BASE_URL_RESV:-${BASE_URL2:-http://ac2b362cae77f45db8edadc997f182a6-2041533653.us-west-2.elb.amazonaws.com}}"
 
 # If you don't want add-host, set: ADD_HOST_FLAG=""
 ADD_HOST_FLAG="${ADD_HOST_FLAG:---add-host=host.docker.internal:host-gateway}"
@@ -110,7 +110,7 @@ TASK_NAME="$1"; shift
 
 # Choose BASE_URL by task group
 case "$TASK_NAME" in
-  post_motel_chain|ping_once|get_motel_chains|get_motels|get_motels_count|seed_room_categories|seed_motel_rooms|post_motel_from_chain)
+  post_motel_chain|ping_once|get_motel_chains|get_motels|seed_room_categories|seed_motel_rooms)
     BASE_URL_TO_USE="$BASE_URL_MOTEL"
     ;;
   reservation_* )
@@ -118,7 +118,7 @@ case "$TASK_NAME" in
     ;;
   *)
     echo "Unknown task: $TASK_NAME"
-    echo "Valid motel tasks: post_motel_chain, ping_once, get_motel_chains, get_motels, get_motels_count, seed_room_categories, seed_motel_rooms, post_motel_from_chain"
+    echo "Valid motel tasks: post_motel_chain, ping_once, get_motel_chains, get_motels, seed_room_categories, seed_motel_rooms"
     echo "Valid reservation tasks: reservation_ping_once, reservation_all_motels, reservation_from_availability, reservation_all_bookings, reservation_by_ids"
     exit 2
     ;;

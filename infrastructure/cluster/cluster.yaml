@@ -19,7 +19,7 @@ managedNodeGroups:
     instanceType: t3.small
     desiredCapacity: 1
     minSize: 1
-    maxSize: 2
+    maxSize: 1
     volumeSize: 20
     labels:
       workload: trafficgen

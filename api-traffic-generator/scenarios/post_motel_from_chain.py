@@ -5,6 +5,44 @@ from ..http_client import client, retry_policy
 
 log = logging.getLogger("post_motel_from_chain_all")
 
+# Maximum number of motels allowed
+MAX_MOTEL = 50
+
+@retry_policy()
+def get_motels_count():
+    """Fetch the current count of motels from the API"""
+    with client() as c:
+        url = "/motelApi/v1/allMotels/count"
+        full_url = f"{c.base_url}{url}"
+        log.info(json.dumps({"event":"get_motels_count_check","url":full_url,"method":"GET"}))
+        
+        try:
+            r = c.get(url)
+            r.raise_for_status()
+            body = r.json()
+            
+            # Extract motels count
+            response_data = body.get("response", {}).get("data", {})
+            postgresql_tables = response_data.get("postgresql_tables", {})
+            motels_count = postgresql_tables.get("motels", 0)
+            
+            log.info(json.dumps({
+                "event": "get_motels_count_check_success",
+                "motels_count": motels_count,
+                "max_allowed": MAX_MOTEL
+            }))
+            
+            return motels_count
+            
+        except Exception as e:
+            log.error(json.dumps({
+                "event": "get_motels_count_check_failed",
+                "error": str(e),
+                "error_type": type(e).__name__
+            }))
+            # If we can't get the count, allow the creation to proceed
+            return 0
+
 # ---------- helpers for chain list shape ----------
 def _chains(body: Dict[str, Any]) -> List[Dict[str, Any]]:
     # Expect: { response: { data: { content: [ ... ] } } }
@@ -106,6 +144,26 @@ def _extract_created_fields(resp: Dict[str, Any]) -> Dict[str, Optional[str]]:
 
 # ---------- main entry ----------
 def run_once():
+    # First check current motels count
+    current_count = get_motels_count()
+    
+    if current_count >= MAX_MOTEL:
+        log.info(json.dumps({
+            "event": "post_motel_from_chain_skipped",
+            "reason": "maximum_motels_reached",
+            "current_count": current_count,
+            "max_allowed": MAX_MOTEL,
+            "message": f"Cannot create new motels. Current count ({current_count}) has reached or exceeded maximum allowed ({MAX_MOTEL})"
+        }))
+        return
+    
+    # Proceed with creating new motels
+    log.info(json.dumps({
+        "event": "post_motel_from_chain_proceeding",
+        "current_count": current_count,
+        "max_allowed": MAX_MOTEL
+    }))
+    
     page = 0
     size = int(os.getenv("PAGE_SIZE", "50"))
     path = os.getenv("CHAIN_GET_PATH", "/motelApi/v1/motelChains")
