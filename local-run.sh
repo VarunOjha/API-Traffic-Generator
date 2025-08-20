@@ -110,9 +110,14 @@ run_task "get_motels" "${BASE_URL_MOTEL}" \
   "PAGE_SIZE=10" \
   "CHAIN_LOOKUP=true" \
 || true
+pause_then_next "get_motels_count"
+
+# 5) get_motels_count (motel service)
+run_task "get_motels_count" "${BASE_URL_MOTEL}" \
+|| true
 pause_then_next "seed_room_categories"
 
-# 5) seed_room_categories (motel service)
+# 6) seed_room_categories (motel service)
 run_task "seed_room_categories" "${BASE_URL_MOTEL}" \
   "PAGE_SIZE=25" \
   "ONLY_ACTIVE=true" \
@@ -121,7 +126,7 @@ run_task "seed_room_categories" "${BASE_URL_MOTEL}" \
 || true
 pause_then_next "seed_motel_rooms"
 
-# 6) seed_motel_rooms (motel service)
+# 7) seed_motel_rooms (motel service)
 run_task "seed_motel_rooms" "${BASE_URL_MOTEL}" \
   "FLOOR_START=0" \
   "FLOOR_END=3" \
@@ -130,12 +135,12 @@ run_task "seed_motel_rooms" "${BASE_URL_MOTEL}" \
 || true
 pause_then_next "reservation_ping_once"
 
-# 7) reservation_ping_once (reservation service)
+# 8) reservation_ping_once (reservation service)
 run_task "reservation_ping_once" "${BASE_URL_RESV}" \
 || true
 pause_then_next "reservation_all_motels"
 
-# 8) reservation_all_motels (reservation service)
+# 9) reservation_all_motels (reservation service)
 run_task "reservation_all_motels" "${BASE_URL_RESV}" \
   "START_PAGE=1" \
   "RESV_PER_PAGE=10" \
@@ -144,7 +149,7 @@ run_task "reservation_all_motels" "${BASE_URL_RESV}" \
 || true
 pause_then_next "reservation_from_availability"
 
-# 9) reservation_from_availability (reservation service)
+# 10) reservation_from_availability (reservation service)
 run_task "reservation_from_availability" "${BASE_URL_RESV}" \
   "START_PAGE=1" \
   "RESV_PER_PAGE=50" \
@@ -156,7 +161,7 @@ run_task "reservation_from_availability" "${BASE_URL_RESV}" \
 || true
 pause_then_next "reservation_all_bookings"
 
-# 10) reservation_all_bookings (reservation service)
+# 11) reservation_all_bookings (reservation service)
 run_task "reservation_all_bookings" "${BASE_URL_RESV}" \
   "START_PAGE=1" \
   "BOOKINGS_PER_PAGE=10" \
@@ -165,7 +170,7 @@ run_task "reservation_all_bookings" "${BASE_URL_RESV}" \
 || true
 pause_then_next "reservation_by_ids"
 
-# 11) reservation_by_ids (reservation service)
+# 12) reservation_by_ids (reservation service)
 run_task "reservation_by_ids" "${BASE_URL_RESV}" \
   "START_PAGE=1" \
   "BOOKINGS_PER_PAGE=25" \

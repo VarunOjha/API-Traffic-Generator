@@ -4,7 +4,7 @@ metadata:
   name: seed-room-categories
   namespace: api-traffic
 spec:
-  schedule: "*/5 * * * *"
+  schedule: "*/10 * * * *"
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -15,7 +15,7 @@ spec:
           containers:
             - name: trafficgen
               image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               env:
                 - name: TASK
                   value: "seed_room_categories"

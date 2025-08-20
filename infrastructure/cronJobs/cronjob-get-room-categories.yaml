@@ -15,7 +15,7 @@ spec:
           containers:
             - name: trafficgen
               image: 520320208231.dkr.ecr.us-west-2.amazonaws.com/api-traffic-generator:v1.0.0
-              imagePullPolicy: IfNotPresent
+              imagePullPolicy: Always
               env:
                 - name: TASK
                   value: "get_room_categories"

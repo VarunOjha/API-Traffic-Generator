@@ -110,7 +110,7 @@ TASK_NAME="$1"; shift
 
 # Choose BASE_URL by task group
 case "$TASK_NAME" in
-  post_motel_chain|ping_once|get_motel_chains|get_motels|seed_room_categories|seed_motel_rooms)
+  post_motel_chain|ping_once|get_motel_chains|get_motels|get_motels_count|seed_room_categories|seed_motel_rooms|post_motel_from_chain)
     BASE_URL_TO_USE="$BASE_URL_MOTEL"
     ;;
   reservation_* )
@@ -118,7 +118,7 @@ case "$TASK_NAME" in
     ;;
   *)
     echo "Unknown task: $TASK_NAME"
-    echo "Valid motel tasks: post_motel_chain, ping_once, get_motel_chains, get_motels, seed_room_categories, seed_motel_rooms"
+    echo "Valid motel tasks: post_motel_chain, ping_once, get_motel_chains, get_motels, get_motels_count, seed_room_categories, seed_motel_rooms, post_motel_from_chain"
     echo "Valid reservation tasks: reservation_ping_once, reservation_all_motels, reservation_from_availability, reservation_all_bookings, reservation_by_ids"
     exit 2
     ;;

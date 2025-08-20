@@ -6,7 +6,7 @@ KUBECONFIG_PATH="../cluster/kubeconfig-api-traffic-generator"
 KCTX="api-traffic-generator"
 NS="api-traffic"
 
-echo "⏸️  Suspending all CronJobs in namespace: $NS ..."
+echo "⏸️  Restarting all CronJobs in namespace: $NS ..."
 
 # Get all CronJobs in the namespace
 CRONJOBS=$(kubectl --kubeconfig $KUBECONFIG_PATH --context $KCTX -n $NS get cronjobs -o name)
